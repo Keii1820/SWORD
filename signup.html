@@ -19,20 +19,19 @@
       justify-content: center;
       align-items: center;
       background: linear-gradient(to bottom, #C9CED6, #666666, #9E8591, transparent);
+      padding: 1rem;
     }
 
     .container-wrapper {
       display: flex;
-      width: 90%;
+      width: 100%;
       max-width: 900px;
-      min-width: 350px;
       border-radius: 16px;
       overflow: hidden;
       box-shadow: 0 8px 25px rgba(0,0,0,0.4);
       background: rgba(255, 255, 255, 0.08);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
-      /* force height to fit form */
       align-items: stretch;
     }
 
@@ -45,29 +44,26 @@
       text-align: left;
       border-right: 1px solid rgba(255,255,255,0.2);
       color: white;
-      min-width: 280px; /* prevents form from getting too narrow */
+      min-width: 300px; /* prevents form from getting too narrow */
     }
 
-.logo-bg {
-  flex: 1.5;          /* relative width */
-  min-width: 150px;
-  max-width: 400px;
-  background: url('https://i.imgur.com/TWwiFRm.jpeg') center center / cover no-repeat;
-  position: relative;
-  background-color: transparent;
-  border-radius: 0 16px 16px 0; /* match container rounding */
-}
+    .logo-bg {
+      flex: 1.5;
+      min-width: 200px;
+      background: url('https://i.imgur.com/TWwiFRm.jpeg') center center / cover no-repeat;
+      position: relative;
+      background-color: transparent;
+      border-radius: 0 16px 16px 0;
+    }
 
-/* Softer overlay so image stays visible but still has subtle effect */
-.logo-bg::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background-color: rgba(255, 255, 255, 0.05); /* very light overlay */
-  pointer-events: none;
-  border-radius: 0 16px 16px 0;
-}
-
+    .logo-bg::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-color: rgba(255, 255, 255, 0.05);
+      pointer-events: none;
+      border-radius: 0 16px 16px 0;
+    }
 
     h1 {
       font-size: 1.5rem;
@@ -81,34 +77,61 @@
       margin-bottom: 1.5rem;
     }
 
+    .input-group {
+      margin-bottom: 0.5rem;
+      position: relative;
+    }
+
     input {
       width: 100%;
       padding: 0.8rem;
-      margin: 0.5rem 0;
-      border: none;
+      margin-top: 0.5rem;
+      border: 1px solid transparent; /* reserve space for border */
       border-radius: 8px;
       outline: none;
+      background: rgba(255, 255, 255, 0.9);
+      color: #333;
     }
+    
+    input.invalid {
+        border-color: #e74c3c;
+    }
+
+    .error-message {
+        color: #f8b4b4;
+        font-size: 0.8rem;
+        margin-top: 4px;
+        min-height: 1.2em; /* Prevent layout shift */
+        display: block;
+    }
+    
+    #password-strength {
+        font-size: 0.8rem;
+        margin-top: 4px;
+        min-height: 1.2em;
+    }
+    
+    #password-strength.weak { color: #e74c3c; }
+    #password-strength.medium { color: #f39c12; }
+    #password-strength.strong { color: #2ecc71; }
+
 
     .terms {
       font-size: 0.8rem;
       margin: 0.5rem 0 1rem 0;
       display: flex;
-      gap: 0;
       align-items: center;
-      
       color: white;
-      white-space: nowrap;
+    }
+
+    .terms label {
+      margin-right: 0.5rem;
     }
 
     .terms input[type="checkbox"] {
-  transform: scale(1.3);
-  transform-origin: center center;
-  /* prevent checkbox from affecting layout size */
-  margin: 0;
-  vertical-align: middle;
-}
-
+      width: auto;
+      margin: 0;
+    }
 
     .btn {
       width: 100%;
@@ -120,17 +143,23 @@
       font-weight: bold;
       cursor: pointer;
       margin-top: 0.5rem;
-      transition: background 0.3s;
+      transition: background 0.3s, opacity 0.3s;
     }
 
     .btn:hover {
       background: #357abd;
     }
+    
+    .btn:disabled {
+        background: #999;
+        cursor: not-allowed;
+        opacity: 0.7;
+    }
 
     .login-link {
       margin-top: 1rem;
       font-size: 0.9rem;
-      color: #989;
+      color: #ddd;
     }
 
     .login-link a {
@@ -142,21 +171,19 @@
     .footer {
       margin-top: 1.5rem;
       font-size: 0.8rem;
-      color: #888;
+      color: #ccc;
     }
 
-    /* Responsive - keep side by side, but adjust min widths */
-    @media (max-width: 500px) {
+    /* Responsive */
+    @media (max-width: 650px) {
       .container-wrapper {
-        max-width: 100%;
-      }
-      .container {
-        min-width: 220px;
-        padding: 1.5rem;
+        flex-direction: column;
       }
       .logo-bg {
-        min-width: 120px;
-        max-width: 180px;
+        display: none; /* Hide image on small screens to focus on form */
+      }
+      .container {
+        border-right: none;
       }
     }
   </style>
@@ -167,34 +194,376 @@
       <h1>Create Account</h1>
       <p>Join SWORD and boost your study productivity</p>
 
-      <form action="/signup" method="POST">
-        <input type="text" name="name" placeholder="Full Name" required />
-        <input type="email" name="email" placeholder="Student Email Address" required />
-        <input type="password" name="password" placeholder="Password" required />
-        <input type="password" name="confirm" placeholder="Confirm Password" required />
-
-        <!-- OTP Section to be revised
-        <div id="otpSection" style="display:none; margin-top: 1rem;">
-    <input type="text" id="otpInput" name="otp" placeholder="Enter OTP" maxlength="6" autocomplete="off" />
-    <div>Time left to enter OTP: <span id="timer">05:00</span></div>
-  </div>-->
-
-        <div class="terms">
-          <label for="terms">I agree to the Terms & Conditions</label>
-          <input type="checkbox" id="terms" name="terms" required />
+      <!-- Assign an ID to the form for easy access in JS -->
+      <form id="signupForm" action="/signup" method="POST" novalidate>
+        
+        <!-- Full Name -->
+        <div class="input-group">
+          <input type="text" id="name" name="name" placeholder="Full Name" required />
+          <span class="error-message" id="nameError"></span>
         </div>
 
-        <button type="submit" class="btn">Sign Up</button>
+        <!-- Email -->
+        <div class="input-group">
+          <input type="email" id="email" name="email" placeholder="Student Email Address" required />
+          <span class="error-message" id="emailError"></span>
+        </div>
+
+        <!-- Password -->
+        <div class="input-group">
+          <input type="password" id="password" name="password" placeholder="Password" required />
+          <div id="password-strength"></div>
+          <span class="error-message" id="passwordError"></span>
+        </div>
+
+        <!-- Confirm Password -->
+        <div class="input-group">
+          <input type="password" id="confirmPassword" name="confirm" placeholder="Confirm Password" required />
+          <span class="error-message" id="confirmPasswordError"></span>
+        </div>
+
+        <!-- OTP Section - Initially hidden -->
+        <div id="otpSection" style="display:none; margin-top: 1rem;">
+          <p style="color: #2ecc71;">A verification code has been sent to your email.</p>
+          <div class="input-group">
+            <input type="text" id="otpInput" name="otp" placeholder="Enter 6-digit OTP" maxlength="6" autocomplete="off" />
+            <span class="error-message" id="otpError"></span>
+          </div>
+          <div>Time left: <span id="timer">05:00</span></div>
+        </div>
+
+        <!-- Terms and Conditions -->
+        <div class="terms">
+          <input type="checkbox" id="terms" name="terms" required />
+          <label for="terms">I agree to the Terms & Conditions</label>
+        </div>
+        <span class="error-message" id="termsError"></span>
+
+        <button type="submit" id="submitBtn" class="btn">Sign Up</button>
       </form>
 
       <div class="login-link">
-        Already have an account? <a href="login.html">Login</a>
+        Already have an account? <a href="#">Login</a>
       </div>
 
       <div class="footer">© 2025 SWORD App. All rights reserved.</div>
     </div>
-    <div class="logo-bg">
-    </div>
+    <div class="logo-bg"></div>
   </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // --- FORM ELEMENT SELECTION ---
+    const form = document.getElementById('signupForm');
+    const nameInput = document.getElementById('name');
+    const emailInput = document.getElementById('email');
+    const passwordInput = document.getElementById('password');
+    const confirmPasswordInput = document.getElementById('confirmPassword');
+    const termsCheckbox = document.getElementById('terms');
+    const submitBtn = document.getElementById('submitBtn');
+
+    // --- ERROR MESSAGE ELEMENT SELECTION ---
+    const nameError = document.getElementById('nameError');
+    const emailError = document.getElementById('emailError');
+    const passwordError = document.getElementById('passwordError');
+    const confirmPasswordError = document.getElementById('confirmPasswordError');
+    const termsError = document.getElementById('termsError');
+    const passwordStrengthDiv = document.getElementById('password-strength');
+    
+    // --- OTP SECTION ELEMENTS ---
+    const otpSection = document.getElementById('otpSection');
+    const otpInput = document.getElementById('otpInput');
+    const otpError = document.getElementById('otpError');
+    const timerSpan = document.getElementById('timer');
+    let otpTimer;
+
+
+    // --- UTILITY FUNCTIONS ---
+    /**
+     * Displays an error message for a given field and adds invalid styling.
+     * @param {HTMLElement} inputElement - The input field.
+     * @param {HTMLElement} errorElement - The element to display the error message in.
+     * @param {string} message - The error message to display.
+     */
+    const showError = (inputElement, errorElement, message) => {
+        inputElement.classList.add('invalid');
+        errorElement.textContent = message;
+    };
+
+    /**
+     * Clears the error message and styling for a given field.
+     * @param {HTMLElement} inputElement - The input field.
+     * @param {HTMLElement} errorElement - The element displaying the error message.
+     */
+    const clearError = (inputElement, errorElement) => {
+        inputElement.classList.remove('invalid');
+        errorElement.textContent = '';
+    };
+    
+    // --- VALIDATION FUNCTIONS ---
+    
+    /**
+     * 1. NAME VALIDATION
+     * Checks if the name field is not empty and has a reasonable length.
+     */
+    const validateName = () => {
+        clearError(nameInput, nameError);
+        const nameValue = nameInput.value.trim();
+        if (nameValue === '') {
+            showError(nameInput, nameError, 'Full Name is required.');
+            return false;
+        }
+        if (nameValue.length < 3) {
+            showError(nameInput, nameError, 'Name must be at least 3 characters long.');
+            return false;
+        }
+        return true;
+    };
+    
+    /**
+     * 2. EMAIL VALIDATION
+     * Checks for a valid email format using a regular expression.
+     * Bonus: Checks for common student email domains.
+     */
+    const validateEmail = () => {
+        clearError(emailInput, emailError);
+        const emailValue = emailInput.value.trim();
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        
+        if (emailValue === '') {
+            showError(emailInput, emailError, 'Email is required.');
+            return false;
+        }
+        if (!emailRegex.test(emailValue)) {
+            showError(emailInput, emailError, 'Please enter a valid email address.');
+            return false;
+        }
+        // Optional: Check for student domains
+        // const studentDomainRegex = /\.(edu|ac\.[a-z]{2})$/i;
+        // if (!studentDomainRegex.test(emailValue)) {
+        //     showError(emailInput, emailError, 'Please use a valid student email (.edu, .ac, etc.).');
+        //     return false;
+        // }
+        return true;
+    };
+
+    /**
+     * 3. PASSWORD STRENGTH & VALIDATION
+     * - Checks for minimum length.
+     * - Checks for uppercase, lowercase, number, and special character.
+     * - Provides real-time feedback on password strength.
+     */
+    const validatePassword = () => {
+        clearError(passwordInput, passwordError);
+        const passwordValue = passwordInput.value;
+        let strength = 0;
+        let messages = [];
+
+        // Rule 1: Minimum 8 characters
+        if (passwordValue.length >= 8) {
+            strength++;
+        } else {
+            messages.push('at least 8 characters');
+        }
+
+        // Rule 2: Contains a lowercase letter
+        if (/[a-z]/.test(passwordValue)) {
+            strength++;
+        } else {
+            messages.push('a lowercase letter');
+        }
+
+        // Rule 3: Contains an uppercase letter
+        if (/[A-Z]/.test(passwordValue)) {
+            strength++;
+        } else {
+            messages.push('an uppercase letter');
+        }
+
+        // Rule 4: Contains a number
+        if (/[0-9]/.test(passwordValue)) {
+            strength++;
+        } else {
+            messages.push('a number');
+        }
+        
+        // Rule 5: Contains a special character
+        if (/[!@#$%^&*(),.?":{}|<>]/.test(passwordValue)) {
+            strength++;
+        } else {
+            messages.push('a special character');
+        }
+
+        // Update strength indicator UI
+        switch (strength) {
+            case 0:
+            case 1:
+            case 2:
+                passwordStrengthDiv.textContent = 'Weak';
+                passwordStrengthDiv.className = 'weak';
+                break;
+            case 3:
+            case 4:
+                passwordStrengthDiv.textContent = 'Medium';
+                passwordStrengthDiv.className = 'medium';
+                break;
+            case 5:
+                passwordStrengthDiv.textContent = 'Strong';
+                passwordStrengthDiv.className = 'strong';
+                break;
+            default:
+                passwordStrengthDiv.textContent = '';
+                passwordStrengthDiv.className = '';
+        }
+        
+        if (messages.length > 0) {
+            showError(passwordInput, passwordError, `Password must contain ${messages.join(', ')}.`);
+            return false;
+        }
+        
+        return true;
+    };
+    
+    /**
+     * 4. CONFIRM PASSWORD VALIDATION
+     * Checks if the confirm password field matches the password field.
+     */
+    const validateConfirmPassword = () => {
+        clearError(confirmPasswordInput, confirmPasswordError);
+        const passwordValue = passwordInput.value;
+        const confirmPasswordValue = confirmPasswordInput.value;
+        
+        if (confirmPasswordValue === '') {
+            showError(confirmPasswordInput, confirmPasswordError, 'Please confirm your password.');
+            return false;
+        }
+        if (passwordValue !== confirmPasswordValue) {
+            showError(confirmPasswordInput, confirmPasswordError, 'Passwords do not match.');
+            return false;
+        }
+        return true;
+    };
+
+    /**
+     * 5. TERMS & CONDITIONS VALIDATION
+     * Checks if the user has agreed to the terms.
+     */
+    const validateTerms = () => {
+        clearError(termsCheckbox, termsError);
+        if (!termsCheckbox.checked) {
+            showError(termsCheckbox, termsError, 'You must agree to the Terms & Conditions.');
+            return false;
+        }
+        return true;
+    };
+    
+    // --- OTP HANDLING ---
+    /**
+     * 6. EMAIL VERIFICATION (OTP)
+     * Starts a countdown timer for OTP entry.
+     */
+    const startOtpTimer = () => {
+        let duration = 5 * 60; // 5 minutes in seconds
+        otpTimer = setInterval(() => {
+            let minutes = Math.floor(duration / 60);
+            let seconds = duration % 60;
+
+            minutes = minutes < 10 ? "0" + minutes : minutes;
+            seconds = seconds < 10 ? "0" + seconds : seconds;
+
+            timerSpan.textContent = `${minutes}:${seconds}`;
+
+            if (--duration < 0) {
+                clearInterval(otpTimer);
+                timerSpan.textContent = "00:00";
+                otpError.textContent = "OTP expired. Please try signing up again.";
+                submitBtn.disabled = true;
+            }
+        }, 1000);
+    };
+    
+    const validateOtp = () => {
+        clearError(otpInput, otpError);
+        const otpValue = otpInput.value.trim();
+        if (otpValue.length !== 6 || !/^\d{6}$/.test(otpValue)) {
+            showError(otpInput, otpError, 'Please enter a valid 6-digit OTP.');
+            return false;
+        }
+        return true;
+    };
+
+
+    // --- EVENT LISTENERS ---
+    
+    // Add real-time validation as the user types
+    nameInput.addEventListener('input', validateName);
+    emailInput.addEventListener('input', validateEmail);
+    passwordInput.addEventListener('input', () => {
+        validatePassword();
+        validateConfirmPassword(); // Re-check confirm password if password changes
+    });
+    confirmPasswordInput.addEventListener('input', validateConfirmPassword);
+    termsCheckbox.addEventListener('change', validateTerms);
+    otpInput.addEventListener('input', validateOtp);
+
+    /**
+     * 7. FORM SUBMISSION HANDLING
+     * - Prevents default submission.
+     * - Runs all validation checks.
+     * - If initial checks pass, it simulates sending an OTP.
+     * - If OTP is showing, it validates the OTP before final submission.
+     */
+    form.addEventListener('submit', (event) => {
+        event.preventDefault(); // Prevent the form from submitting the traditional way
+
+        // Check which stage of submission we are in
+        const isOtpVisible = otpSection.style.display === 'block';
+
+        if (!isOtpVisible) {
+            // --- STAGE 1: Initial Data Validation ---
+            const isNameValid = validateName();
+            const isEmailValid = validateEmail();
+            const isPasswordValid = validatePassword();
+            const isConfirmPasswordValid = validateConfirmPassword();
+            const areTermsAgreed = validateTerms();
+
+            if (isNameValid && isEmailValid && isPasswordValid && isConfirmPasswordValid && areTermsAgreed) {
+                console.log('Initial validation successful. Simulating OTP request...');
+                // In a real app, you would make an API call here to your server
+                // to send an OTP to the user's email.
+                
+                // Show the OTP section and update the UI
+                otpSection.style.display = 'block';
+                submitBtn.textContent = 'Verify & Create Account';
+                
+                // Disable other fields
+                nameInput.disabled = true;
+                emailInput.disabled = true;
+                passwordInput.disabled = true;
+                confirmPasswordInput.disabled = true;
+                
+                startOtpTimer();
+            } else {
+                console.log('Initial validation failed.');
+            }
+        } else {
+            // --- STAGE 2: OTP Validation ---
+            const isOtpValid = validateOtp();
+            
+            if (isOtpValid) {
+                console.log('OTP validation successful. Submitting form...');
+                // In a real app, you would now submit all the form data,
+                // including the OTP, to your server for final verification.
+                alert('Account created successfully! (Simulation)');
+                
+                // To actually submit the form to the backend:
+                // form.submit(); 
+            } else {
+                console.log('OTP validation failed.');
+            }
+        }
+    });
+});
+</script>
 </body>
 </html>
