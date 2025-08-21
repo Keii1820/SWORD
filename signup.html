@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>SWORD - Sign Up</title>
   <style>
-    /* Reset & font */
     * {
       margin: 0;
       padding: 0;
@@ -44,16 +43,16 @@
       text-align: left;
       border-right: 1px solid rgba(255,255,255,0.2);
       color: white;
-      min-width: 300px; /* prevents form from getting too narrow */
+      min-width: 300px; 
     }
 
     .logo-bg {
       flex: 1.5;
-      min-width: 200px;
+      min-width: 150px;
+      max-width: 400px;
       background: url('https://i.ibb.co/bj15Qtbm/undefined-Imgur.png') center center / cover no-repeat;
       position: relative;
       background-color: transparent;
-      border-radius: 0 16px 16px 0;
     }
 
     .logo-bg::after {
@@ -86,7 +85,7 @@
       width: 100%;
       padding: 0.8rem;
       margin-top: 0.5rem;
-      border: 1px solid transparent; /* reserve space for border */
+      border: 1px solid transparent;
       border-radius: 8px;
       outline: none;
       background: rgba(255, 255, 255, 0.9);
@@ -101,7 +100,7 @@
         color: #f8b4b4;
         font-size: 0.8rem;
         margin-top: 4px;
-        min-height: 1.2em; /* Prevent layout shift */
+        min-height: 1.2em; 
         display: block;
     }
     
@@ -158,8 +157,9 @@
 
     .login-link {
       margin-top: 1rem;
-      font-size: 0.9rem;
-      color: #ddd;
+      font-weight: 300;
+      font-size: 15px;
+      color: rgb(96, 90, 96);
     }
 
     .login-link a {
@@ -170,7 +170,8 @@
 
     .footer {
       margin-top: 1.5rem;
-      font-size: 0.8rem;
+      font-size: 11px;
+      font-weight: bold;
       color: rgb(96, 90, 96);
     }
 
@@ -180,7 +181,7 @@
         flex-direction: column;
       }
       .logo-bg {
-        display: none; /* Hide image on small screens to focus on form */
+        display: none; 
       }
       .container {
         border-right: none;
@@ -567,3 +568,4 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 </body>
 </html>
+
